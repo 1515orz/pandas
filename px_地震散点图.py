@@ -1,13 +1,31 @@
 import plotly.express as px
+import requests
 import pandas as pd
-import test1
 
-data = pd.DataFrame(data=zip(test1.lons,test1.lats,test1.places,test1.mags),columns=['经度','纬度','位置','震级'])
+
+eq = requests.get('https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/1.0_day.geojson')
+reader_eq = eq.json()
+
+mags,places,lons,lats = [],[],[],[] # 震级,地点,经度,维度
+
+for eq_dict in reader_eq['features']:
+    mag = eq_dict['properties']['mag']
+    place = eq_dict['properties']['place']
+    lon = eq_dict['geometry']['coordinates'][0]
+    lat = eq_dict['geometry']['coordinates'][1]
+
+    mags.append(mag)
+    places.append(place)
+    lons.append(lon)
+    lats.append(lat)
+
+data = pd.DataFrame(data=zip(lons,lats,places,mags),columns=['经度','纬度','位置','震级'])
+print(data)
 
 fig = px.scatter(
     data,
-    x = test1.lons,
-    y = test1.lats,
+    x = lons,
+    y = lats,
     labels={'x':'经度','y':'纬度'},
     range_x = [-200,200],
     range_y = [-90,90],

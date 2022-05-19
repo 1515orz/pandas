@@ -35,7 +35,7 @@ with open(filename1) as f:
 
 with open(filename2) as f:  # 打开整理后的和整理前的json文件是一样的
     reader_eq = json.load(f)
-    print(reader_eq)
+    # print(reader_eq)
 mags,places,lons,lats = [],[],[],[] # 震级,地点,经度,维度
 
 for eq_dict in reader_eq['features']:
